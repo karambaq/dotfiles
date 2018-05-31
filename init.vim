@@ -2,15 +2,15 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'junegunn/vim-easy-align'
 
-" Plug 'vim-airline/vim-airline'
-" 
-" Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline'
+
+Plug 'vim-airline/vim-airline-themes'
 
 Plug 'jiangmiao/auto-pairs'
 
 Plug 'tyrannicaltoucan/vim-quantum'
 
-Plug 'flazz/vim-colorschemes'
+" Plug 'flazz/vim-colorschemes'
 
 Plug 'mhinz/vim-startify'
 
@@ -78,7 +78,9 @@ Plug 'jszakmeister/vim-togglecursor'
 Plug 'henrik/vim-indexed-search'
 " Plug 'mkitt/tabline.vim'
 " Plug 'bling/vim-bufferline'
-Plug 'ap/vim-buftabline'
+
+
+" Plug 'ap/vim-buftabline'
 Plug 'haya14busa/vim-keeppad'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -87,13 +89,15 @@ Plug 'mileszs/ack.vim'
 Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
 " Plug 'donRaphaco/neotex', { 'for': 'tex' }
 " Plug 'mgee/lightline-bufferline'
+Plug 'vim-python/python-syntax'
+" Plug 'rakr/vim-one'
+Plug 'joshdick/onedark.vim'
+" Plug 'KeitaNakamura/neodark.vim'
 " Initialize plugin system
 call plug#end()
 
 
-" set showtabline=2
 " Global
-"let g:tex_flavor = 'latex'
 let g:livepreview_previewer = 'open -a Preview'
 let g:ackprg = 'ag --vimgrep'
 let g:jedi#force_py_version=3
@@ -105,68 +109,81 @@ let g:echodoc#enable_at_startup = 1
 let g:deoplete#sources#jedi#enable_cache = 1
 set completeopt+=noinsert
 set completeopt-=preview
-" set completeopt=menuone,longest
 
-" imap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-" imap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+set cmdheight=2
 set hidden
 set encoding=utf-8
-set background=dark
-" set noshowmode
-set cmdheight=2
-let g:quantum_black=1
-colorscheme quantum
-set mouse=a
+" let g:onedark_termcolors=16
+let g:onedark_terminal_italics=1
+let g:webdevicons_enable_airline_tabline = 0
+let g:webdevicons_enable_airline_statusline = 0
+"onedark.vim override: Set a custom background color in the terminal
+" if (has("autocmd") && !has("gui_running"))
+"   augroup colors
+"     autocmd!
+"     let s:background = { "gui": "#222222", "cterm": "235", "cterm16": "0" }
+"     autocmd ColorScheme * call onedark#set_highlight("Normal", { "bg": s:background }) "No `fg` setting
+"   augroup END
+" endif
+
+colorscheme onedark
+" set background=dark
+" let g:quantum_black=1
+" colorscheme quantum
+
+" Airline settings
+let g:airline_powerline_fonts = 1
+" let g:airline_section_a = ''
+let g:airline_section_b = ''
+let g:airline_section_c = airline#section#create(['path'])
+" let g:airline_section_y = ''
+let g:airline_section_x = airline#section#create(['tagbar'])
+call airline#parts#define_raw('pp', '%3p%%')
+call airline#parts#define_accent('pp', 'bold')
+let g:airline_section_z = airline#section#create(['pp', ' │ %l/%L │ %c '])
+" let g:airline_section_c = ''
+let g:airline_section_warning = ''
+" let g:airline#extensions#disable_rtp_load = 1
+let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
+" let g:airline#extensions#tagbar#enabled = 1
+" let g:airline#extensions#csv#enabled = 0
+" let g:airline#extensions#wordcount#enabled = 1
+" let g:airline_section_gutter = ''
 set termguicolors
-let g:mapleader=" "
 set t_Co=256
 
+set mouse=a
+let g:mapleader=" "
+
 let g:SuperTabDefaultCompletionType = "<c-n>"
-" let g:jedi#auto_vim_configuration = 0
-" let g:jedi#goto_assignments_command = ''  " dynamically done for ft=python.
-" let g:jedi#goto_definitions_command = ''  " dynamically done for ft=python.
-" let g:jedi#use_tabs_not_buffers = 1  " current default is 1.
-" let g:jedi#rename_command = '<Leader>gR'
-" let g:jedi#usages_command = '<Leader>gu'
-" let g:jedi#completions_enabled = 0
-" let g:jedi#smart_auto_mappings = 1
-" let g:jedi#popup_select_first = 1
-" let g:jedi#show_call_signatures = 0
-" Unite/ref and pydoc are more useful.
-" let g:jedi#documentation_command = '<Leader>_K'
-" let g:jedi#auto_close_doc = 1
-" let g:jedi#show_dockstring = 0
 map <Leader> <Plug>(easymotion-prefix)
 nmap ga <Plug>(EasyAlign)
 xmap ga <Plug>(EasyAlign)
-" set completeopt-=prev
-" inoremap <C-space> <C-x><C-o>
 map <F5> :w :!python3 %<CR>
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
-"    \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
-"  
-"  inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
-"   \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+map <F6> :source $MYVIMRC<bar>:AirlineRefresh<CR>
+map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+\ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+\ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+" autocmd VimEnter * execute "normal \<F6>"
 
-"inoremap <silent><expr> ( complete_parameter#pre_complete("()")
-" smap <c-j> <Plug>(complete_parameter#goto_next_parameter)
-" imap <c-j> <Plug>(complete_parameter#goto_next_parameter)
-" smap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
-" imap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 let g:AutoPairs = {'[':']', '{':'}',"'":"'",'"':'"', '`':'`', '(':')'}
 inoremap <buffer><silent> ) <C-R>=AutoPairsInsert(')')<CR>
 " Python settings
-let python_highlight_all = 1
-"  " Docs
-"  let g:pymode_doc = 0
-"  let g:pymode_doc_key = 'K'
-"  
-"  " Linting
-"  let g:pymode_lint = 1
-"  let g:pymode_lint_write = 1
-"  
-" TagBar 
+" let g:python_highlight_all = 1
+
+let g:python_highlight_class_vars=1
+let g:python_highlight_operators=0
+" let g:python_highlights_builtins=0
+" let g:python_highlight_class_vars=1
+" let g:python_highlight_builtin_funcs_kwarg=1
+" let g:python_highlight_exceptions=1
+let g:python_highlight_string_formatting=1
+let g:python_highlight_string_format=1
+let g:python_highlight_string_templates=1
+" let g:python_highlight_indent_errors=1
+" let g:python_highlight_space_errors=1
+
 let g:tagbar_compact = 1
 let g:tagbar_autofocus = 1 " автофокус на Tagbar при открытии
 map <F4> :TagbarToggle<CR>
@@ -209,14 +226,22 @@ let g:UltiSnipsExpandTrigger="<tab>"
 " let g:airline_alt_left_sep='|'
 " let g:airline_alt_right_sep='|'
 " " let g:airline_tab
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_tab_type = 0
 " let g:airline#extensions#tabline#enabled = 1
-let w:airline_disabled=1
-" let g:startify_custom_header = [
-" \'     ____  ___  ____ _   __(_)___ ___',
-" \'    / __ \/ _ \/ __ \ | / / / __ `__ \',
-" \'   / / / /  __/ /_/ / |/ / / / / / / /',
-" \'  /_/ /_/\___/\____/|___/_/_/ /_/ /_/',
-" \]
+" let w:airline_disabled=1
+" 
+" 
+" 
+" 
+" 
+" 
+let g:startify_custom_header = [
+\'     ____  ___  ____ _   __(_)___ ___',
+\'    / __ \/ _ \/ __ \ | / / / __ `__ \',
+\'   / / / /  __/ /_/ / |/ / / / / / / /',
+\'  /_/ /_/\___/\____/|___/_/_/ /_/ /_/',
+\]
 
 let g:startify_list_order = [
             \ 'files',
@@ -227,18 +252,18 @@ let g:startify_files_number = 6
 let g:startify_bookmarks = [ {'c': '~/.config/nvim/init.vim'}, {'z':'~/.zshrc'} , {'t': '~/.tmux.conf'}]
 let g:startify_enable_special = 0
 let g:startify_custom_indices = map(range(1,100), 'string(v:val)')  
- set statusline=%<%t\%=%p%%\ %t\ %l\/%L\ %M\ %R
+" set statusline=%<%t\%=%p%%\ %t\ %l\/%L\ %M\ %R
 "set statusline=%<%F\ %h%=%p%%\ %l\/%L\ %R\ %M
 set fillchars=vert:\ ,stl:\ ,stlnc:\ 
 language en_US.UTF-8
 set ttyfast
 set laststatus=2
-let $TERM='screen-256color'
+" let $TERM='screen-256color'
 au VimLeave * set guicursor=a:hor1-blinkon0
-let g:buftabline_show=1
-let g:buftabline_numbers=0
-let g:buftabline_indicators=1
-let g:buftabline_separators=1
+" let g:buftabline_show=1
+" let g:buftabline_numbers=0
+" let g:buftabline_indicators=1
+" let g:buftabline_separators=1
 if exists('$ITERM_PROFILE')
   if exists('$TMUX')
     let &t_SI = "\<Esc>[3 q"
@@ -257,11 +282,6 @@ let g:gitgutter_sign_modified_removed='◢'
 
 set updatetime=100
 
-" let g:incsearch#magic='\v'
-" let g:incsearch#smart_backward_word=1
-" let g:incsearch#consistent_n_direction=1
-" let g:incsearch#auto_nohlsearch=0
-" let g:incsearch#no_inc_hlsearch=1
 let g:incsearch#highlight={
             \       'match' : {
             \           'priority' : '10'
@@ -275,4 +295,4 @@ let g:incsearch#highlight={
             \       }
             \ }
 
-let g:vimtex_view_method='zathura'
+
