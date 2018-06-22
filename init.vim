@@ -2,6 +2,8 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'junegunn/vim-easy-align'
 
+Plug 'majutsushi/tagbar'
+
 Plug 'vim-airline/vim-airline'
 
 Plug 'vim-airline/vim-airline-themes'
@@ -13,8 +15,6 @@ Plug 'tyrannicaltoucan/vim-quantum'
 " Plug 'flazz/vim-colorschemes'
 
 Plug 'mhinz/vim-startify'
-
-Plug 'majutsushi/tagbar'
 
 Plug 'shime/vim-livedown'
 
@@ -110,9 +110,12 @@ let g:deoplete#sources#jedi#enable_cache = 1
 set completeopt+=noinsert
 set completeopt-=preview
 
+set noshowmode
+set noruler
 set cmdheight=2
 set hidden
 set encoding=utf-8
+set noshowcmd
 " let g:onedark_termcolors=16
 let g:onedark_terminal_italics=1
 let g:webdevicons_enable_airline_tabline = 0
@@ -136,15 +139,24 @@ let g:airline_powerline_fonts = 1
 " let g:airline_section_a = ''
 let g:airline_section_b = ''
 let g:airline_section_c = airline#section#create(['path'])
+" au User AirlineAfterInit let g:airline_section_x = airline#section#create_right(['tagbar'])
+au VimEnter * let g:airline_section_x = airline#section#create_right(['tagbar']) | :AirlineRefresh
 " let g:airline_section_y = ''
-let g:airline_section_x = airline#section#create(['tagbar'])
+" let g:airline_section_x = airline#section#create(['tagbar'])
 call airline#parts#define_raw('pp', '%3p%%')
 call airline#parts#define_accent('pp', 'bold')
-let g:airline_section_z = airline#section#create(['pp', ' │ %l/%L │ %c '])
+
+call airline#parts#define_raw('ll', '%l/%L')
+call airline#parts#define_accent('ll', 'bold')
+
+call airline#parts#define_raw('cc', '%c')
+call airline#parts#define_accent('cc', 'bold')
+let g:airline_section_z = airline#section#create(['pp', ' │ ', 'll' , ' │ ', 'cc'])
 " let g:airline_section_c = ''
 let g:airline_section_warning = ''
 " let g:airline#extensions#disable_rtp_load = 1
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
+" let g:airline#parts#ffenc#skip_expected_string='[unix]'
 " let g:airline#extensions#tagbar#enabled = 1
 " let g:airline#extensions#csv#enabled = 0
 " let g:airline#extensions#wordcount#enabled = 1
@@ -257,7 +269,7 @@ let g:startify_custom_indices = map(range(1,100), 'string(v:val)')
 set fillchars=vert:\ ,stl:\ ,stlnc:\ 
 language en_US.UTF-8
 set ttyfast
-set laststatus=2
+set laststatus=0
 " let $TERM='screen-256color'
 au VimLeave * set guicursor=a:hor1-blinkon0
 " let g:buftabline_show=1
@@ -274,6 +286,7 @@ if exists('$ITERM_PROFILE')
   endif
 end
 
+autocmd FileType kv  let b:deoplete_disable_auto_complete = 1
 let g:gitgutter_sign_added='┃'
 let g:gitgutter_sign_modified='┃'
 let g:gitgutter_sign_removed='◢'

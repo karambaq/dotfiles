@@ -53,6 +53,7 @@ alias vim=nvim
 alias n=nvim
 alias t=tmux
 alias python=python3
+alias p=cd ~/Projects/
 alias updatedb=sudo /usr/libexec/locate.updatedb 
 
 
@@ -75,6 +76,13 @@ On_Blue='\033[44m'        # Blue
 On_Purple='\033[45m'      # Purple
 On_Cyan='\033[46m'        # Cyan
 On_White='\033[47m'       # White
+
+
+
+pc(){
+    cd ~/Projects/$argv
+}
+
 
 pushit() {
     printf "${Yellow}Adding changes to repository...\n" &&
@@ -116,3 +124,8 @@ alias pg-stop="launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.postgresql.
 # [[ $TERM != "screen" ]] && exec tmux
 
 # [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+#
+#
+# # tiny-care-terminal settings
+export TTC_WEATHER=Rostov-on-Don
+export TTC_REPOS=/Users/pq/Projects/
